@@ -1,6 +1,6 @@
 # dataviscourse-project-Geolife
 
-This is the repository for our Visualization for Data course. 
+This is the repository for our Visualization for Data Science course. 
 
 In this project we are going to visualize the Geolife GPS Trajectory Dataset released by Microsoft. 
 
