@@ -1,0 +1,14 @@
+# Cleaning Data and Creating Mapped Data
+
+First we have removed 7 users that had only 1 trajectory. The reason for this is that we are goint to do a dimentionality reduction 
+task with PCA and so we need at least 2 trajectories for each user. So, we have 175 users now. 
+
+Using our feature map, we have mapped each trajectory to a 20-dimentional vector. 
+
+Eache user's mapped trajectories are stored in a csv file with the same user's number inside 
+Vis_Vectors-20-dimensional-larger-than-1-trajectories.zip file. For instance, for user 5 the corresponding 
+trajectories are saved in 5.csv file. Thus, the file Vis_Vectors-20-dimensional-larger-than-1-trajectories.zip 
+consists of 175 csv files, each for one user. 
+
+We have used PCA algorithm to do a dimentionality reduction task from 20 dimensions to 2 dimensions. 
+The resulted vectors and they are saved in the Vis_Vectors-20-to-2-PCA.zip file with the same name. 
