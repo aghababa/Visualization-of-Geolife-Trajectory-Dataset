@@ -1,15 +1,23 @@
-<!DOCTYPE html>
 <html>
 <head>
-    <meta charset=utf-8 />
+    <meta charset=utf-8/>
     <title>Polylines</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet'/>
     <script src="https://d3js.org/d3.v6.min.js"></script>
-    <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
     <style>
-        body { margin:0; padding:0; }
-        #map { position:absolute; top:0; bottom:0; width:100%; }
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -17,55 +25,56 @@
 <div id='map'></div>
 
 <script>
-    var myData = null
-    d3.dsv(",", "20081023025304.plt").then(function(data) {
-        myData= data
-        console.log(data);
+    d3.dsv(",", "20081023025304.plt").then(function (data) {
+        // mapboxgl.accessToken = '';
+        mapboxgl.accessToken = "pk.eyJ1IjoiYXVzdGlud2F0a2lucyIsImEiOiJja2hiaW00c3AwMDNwMnBtbXNzbm82aGkyIn0.JomTNPP-9_2Z7E3XGxcCeA";
+
+        var map = new mapboxgl.Map({
+            container: "map",
+            style: "mapbox://styles/mapbox/streets-v11",
+            center: [116.4074, 39.9042],
+            zoom: 11
+        });
+
+        var container = map.getCanvasContainer();
+        var svg = d3
+            .select(container)
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .style("position", "absolute")
+            .style("z-index", 2);
+
+        function project(d) {
+            return map.project(new mapboxgl.LngLat(d[0], d[1]));
+        }
+
+        var data = [[116.4074, 39.9042]];
+        // .setView( 116.4074], 11)
+
+        var dots = svg
+            .selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("r", 50)
+            .style("fill", "ff0000");
+
+        function render() {
+            dots
+                .attr("cx", function (d) {
+                    return project(d).x;
+                })
+                .attr("cy", function (d) {
+                    return project(d).y;
+                });
+        }
+
+        map.on("viewreset", render);
+        map.on("move", render);
+        map.on("moveend", render);
+        render(); // Call once to render
     });
-
-    L.mapbox.accessToken = 'pk.eyJ1IjoiYXVzdGlud2F0a2lucyIsImEiOiJja2hiaW00c3AwMDNwMnBtbXNzbm82aGkyIn0.JomTNPP-9_2Z7E3XGxcCeA';
-
-    var map = L.mapbox.map('map')
-        .setView([39.9042, 116.4074], 11)
-        .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11'));
-
-    // Define circle options
-    // http://leafletjs.com/reference.html#circle
-    var circle_options = {
-        color: '#fff',      // Stroke color
-        opacity: 1,         // Stroke opacity
-        weight: 10,         // Stroke weight
-        fillColor: '#000',  // Fill color
-        fillOpacity: 0.6    // Fill opacity
-    };
-
-    var circle_one = L.circle([38.89415, -77.03738], 20, circle_options).addTo(map);
-    var circle_two = L.circle([38.89415, -77.03578], 20, circle_options).addTo(map);
-
-    // Create array of lat,lon points.
-    var line_points = [
-        [38.893596444352134, -77.0381498336792],
-        [38.89337933372204, -77.03792452812195],
-        [38.89316222242831, -77.03761339187622],
-        [38.893028615148424, -77.03731298446655],
-        [38.892920059048464, -77.03691601753235],
-        [38.892903358095296, -77.03637957572937],
-        [38.89301191422077, -77.03592896461487],
-        [38.89316222242831, -77.03549981117249],
-        [38.89340438498248, -77.03514575958252],
-        [38.893596444352134, -77.0349633693695]
-    ];
-
-    // Define polyline options
-    // http://leafletjs.com/reference.html#polyline
-    var polyline_options = {
-        color: '#000'
-    };
-
-    // Defining a polygon here instead of a polyline will connect the
-    // endpoints and fill the path.
-    // http://leafletjs.com/reference.html#polygon
-    var polyline = L.polyline(line_points, polyline_options).addTo(map);
 </script>
 
 </body>
