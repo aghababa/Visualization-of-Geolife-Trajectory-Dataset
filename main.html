@@ -26,7 +26,6 @@
 
 <script>
     d3.dsv(",", "20081023025304.plt").then(function (data) {
-        // mapboxgl.accessToken = '';
         mapboxgl.accessToken = "pk.eyJ1IjoiYXVzdGlud2F0a2lucyIsImEiOiJja2hiaW00c3AwMDNwMnBtbXNzbm82aGkyIn0.JomTNPP-9_2Z7E3XGxcCeA";
 
         var map = new mapboxgl.Map({
@@ -46,28 +45,29 @@
             .style("z-index", 2);
 
         function project(d) {
-            return map.project(new mapboxgl.LngLat(d[0], d[1]));
+            return map.project(new mapboxgl.LngLat(+d.lon, +d.lat));
         }
 
-        var data = [[116.4074, 39.9042]];
-        // .setView( 116.4074], 11)
+        var paths = svg.append("path")
+            .datum(data)
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 1.5)
 
-        var dots = svg
-            .selectAll("circle")
-            .data(data)
-            .enter()
-            .append("circle")
-            .attr("r", 50)
-            .style("fill", "ff0000");
 
         function render() {
-            dots
-                .attr("cx", function (d) {
-                    return project(d).x;
-                })
-                .attr("cy", function (d) {
-                    return project(d).y;
-                });
+            paths
+                .attr("d", d3.line()
+                    .x(function (d) {
+                        // return x(d.date)
+                        return project(d).x;
+                    })
+                    .y(function (d) {
+                        // return y(d.value)
+                        // todo: make sure my lat on lon are correct
+                        return project(d).y;
+                    })
+                )
         }
 
         map.on("viewreset", render);
