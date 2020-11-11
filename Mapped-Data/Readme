@@ -12,3 +12,6 @@ consists of 175 csv files, each for one user.
 
 We have used PCA algorithm to do a dimentionality reduction task from 20 dimensions to 2 dimensions. 
 The resulted vectors and they are saved in the Vis_Vectors-20-to-2-PCA.zip file with the same name. 
+
+The Q.csv file containes the x,y-coordinates of 20 points employed in the feature map with sigma = 0.3 
+in order to create 20-dimesional vectors for each trajectory discussed above.
