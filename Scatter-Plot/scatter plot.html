@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Words</title>
+	<script src="https://d3js.org/d3.v6.min.js"></script>
+	<style>
+		#circles{
+			position: absolute;
+			opacity: .1;
+			z-index: 1;
+		}
+		#centercircles{
+
+		}
+		#selectedcircles{
+			opacity: 1;
+		}
+
+
+	</style>
+</head>
+<body>
+	<div >
+		<span class="select">
+		  <label>Choose number of clusters:</label>
+		  <select id="cluster">
+		  	<option value="2">2</option>
+		  </select>
+		</span>
+	</div>
+<script src="scatterplot.js"></script>
+<script type="text/javascript">
+
+	d3.csv("final_data_with_indices.csv").then(function(data) {
+  	s=new scatterplot(data)
+  	d3.select('.select').append('button').attr('type','button').attr('onclick','s.drawcircles()').html('Draw ScatterPlot');
+  	
+  
+  
+
+
+
+
+
+
+	});
+
+
+	// one.selectAll('circle').data([{'x':10,'y':10,'z':10},{'x':80,'y':80,'z':20}])
+	// .join('circle')
+	// .attr('cx',d=>d['x'])
+	// .attr('cy',d=>d['y'])
+	// .attr('r',10)
+	// .attr('class',d=>'_'+d["x"]+' '+'labelid')
+	// .on('click',function(d,i){
+	// 	if (i.x===i.z){
+	// 		d3.selectAll('.labelid').classed('labelid',false)
+	// 	}
+		
+	// });
+
+
+	
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
