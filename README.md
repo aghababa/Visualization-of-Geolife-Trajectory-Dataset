@@ -15,3 +15,6 @@ Team Members: Austin Sheen Watkins and Hasan Pourmahmoodaghababa
 
 We will talk about what we would have done step by step when we finish each phase. 
 
+## Process book (includes in-class feedback)
+https://docs.google.com/document/d/1-BhvYp9iiuQITzBP5DffMFfcNs_2RvNu63aTDVKqBq0/edit?usp=sharing
+
