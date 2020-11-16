@@ -72,7 +72,7 @@
 
 
         function render() {
-            d3.selectAll('path')
+            paths
                 .attr("d", d3.line()
                     .x(function (d) {
                         return project(d).x;
@@ -83,9 +83,9 @@
                 )
         }
 
-        map.on("viewreset", render);
-        map.on("move", render);
-        map.on("moveend", render);
+        // map.on("viewreset", render);
+        // map.on("move", render);
+        // map.on("moveend", render);
         render();
 
     });
