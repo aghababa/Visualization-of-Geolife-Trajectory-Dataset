@@ -5,6 +5,7 @@
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no'/>
     <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet'/>
+    <script src="https://d3js.org/d3-collection.v1.min.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <style>
         body {
@@ -25,9 +26,10 @@
 <div id='map'></div>
 
 <script>
-    d3.dsv(",", "20081023025304.plt").then(function (data) {
+    d3.dsv(",", "all_trajectory_data.csv").then(function (data) {
         mapboxgl.accessToken = "pk.eyJ1IjoiYXVzdGlud2F0a2lucyIsImEiOiJja2hiaW00c3AwMDNwMnBtbXNzbm82aGkyIn0.JomTNPP-9_2Z7E3XGxcCeA";
 
+        let userData = d3.nest().key(function (d) {return d.user}).key(function (d) {return d.trajectory}).entries(data)
         var map = new mapboxgl.Map({
             container: "map",
             style: "mapbox://styles/mapbox/streets-v11",
@@ -48,23 +50,34 @@
             return map.project(new mapboxgl.LngLat(+d.lon, +d.lat));
         }
 
-        var paths = svg.append("path")
-            .datum(data)
+        var users = svg.selectAll('g')
+            .data(userData)
+            .enter()
+            .append('g')
+            .attr('class', (d) => {return d.key} )
+
+        var trajectories = users.selectAll('g')
+            .data((d) => {return d.values})
+            .enter()
+            .append('g')
+            .attr('class', (d) => {return d.key} )
+
+        var paths = trajectories.selectAll('thing')
+            .data((d) => {return [d.values]})
+            .enter()
+            .append('path')
             .attr("fill", "none")
             .attr("stroke", "steelblue")
             .attr("stroke-width", 1.5)
 
 
         function render() {
-            paths
+            d3.selectAll('path')
                 .attr("d", d3.line()
                     .x(function (d) {
-                        // return x(d.date)
                         return project(d).x;
                     })
                     .y(function (d) {
-                        // return y(d.value)
-                        // todo: make sure my lat on lon are correct
                         return project(d).y;
                     })
                 )
@@ -73,7 +86,8 @@
         map.on("viewreset", render);
         map.on("move", render);
         map.on("moveend", render);
-        render(); // Call once to render
+        render();
+
     });
 </script>
 
