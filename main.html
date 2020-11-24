@@ -41,7 +41,7 @@
             margin: 20px;
         }
 
-        #selectedPath {
+        .selectedPath {
             stroke: red;
         }
 
@@ -77,104 +77,150 @@
 
 <script>
     d3.dsv(",", "all_trajectory_data.csv").then(function (data) {
-        mapboxgl.accessToken = "pk.eyJ1IjoiYXVzdGlud2F0a2lucyIsImEiOiJja2hiaW00c3AwMDNwMnBtbXNzbm82aGkyIn0.JomTNPP-9_2Z7E3XGxcCeA";
-
-        let userData = d3.nest().key(function (d) {
-            return d.user
-        }).key(function (d) {
-            return d.trajectory
-        }).entries(data)
-        var map = new mapboxgl.Map({
-            container: "map",
-            style: "mapbox://styles/mapbox/streets-v11",
-            center: [116.4074, 39.9042],
-            zoom: 11
-        });
-
-        var container = map.getCanvasContainer();
-        var svg = d3
-            .select(container)
-            .append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%")
-            .style("position", "absolute")
-            .style("z-index", 2);
-
-        function project(d) {
-            return map.project(new mapboxgl.LngLat(+d.lon, +d.lat));
-        }
-
-        var users = svg.selectAll('g')
-            .data(userData)
-            .enter()
-            .append('g')
-            .attr('class', (d) => {
-                return d.key
-            })
-
-        var trajectories = users.selectAll('g')
-            .data((d) => {
-                return d.values
-            })
-            .enter()
-            .append('g')
-            .attr('class', (d) => {
-                return d.key
-            })
-
-        var paths = trajectories.selectAll('thing')
-            .data((d) => {
-                return [d.values]
-            })
-            .enter()
-            .append('path')
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", 1.5)
+            mapboxgl.accessToken = "pk.eyJ1IjoiYXVzdGlud2F0a2lucyIsImEiOiJja2hiaW00c3AwMDNwMnBtbXNzbm82aGkyIn0.JomTNPP-9_2Z7E3XGxcCeA";
 
 
-        function render() {
-            paths
-                .attr("d", d3.line()
-                    .x(function (d) {
-                        return project(d).x;
-                    })
-                    .y(function (d) {
-                        return project(d).y;
-                    })
+            let userData = d3.nest().key(function (d) {
+                return d.user
+            }).key(function (d) {
+                return d.trajectory
+            }).entries(data)
+            var map = new mapboxgl.Map({
+                container: "map",
+                style: "mapbox://styles/mapbox/streets-v11",
+                center: [116.4074, 39.9042],
+                zoom: 11
+            });
+
+            var container = map.getCanvasContainer();
+            var svg = d3
+                .select(container)
+                .append("svg")
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .style("position", "absolute")
+                .style("z-index", 2);
+
+            function project(d) {
+                return map.project(new mapboxgl.LngLat(+d.lon, +d.lat));
+            }
+
+            var tree = d3.quadtree()
+                .x(d => {
+                    //     return d.lon
+                    return project(d).x
+                })
+                .y(d => {
+                    return project(d).y
+                    // return d.lat
+                })
+                .addAll(data);
+
+            // This function is from https://github.com/d3/d3-quadtree
+            function search(quadtree, xmin, ymin, xmax, ymax) {
+                const results = [];
+                quadtree.visit(function (node, x1, y1, x2, y2) {
+                    if (!node.length) {
+                        do {
+                            var d = node.data;
+                            var coordinates = project(d)
+                            let x = coordinates.x
+                            let y = coordinates.y
+                            if (x >= xmin && x < xmax && y >= ymin && y < ymax) {
+                                results.push(d);
+                            }
+                        } while (node = node.next);
+                    }
+                    return x1 >= xmax || y1 >= ymax || x2 < xmin || y2 < ymin;
+                });
+                return results;
+            }
+
+            var users = svg.selectAll('g')
+                .data(userData)
+                .enter()
+                .append('g')
+                .attr('class', (d) => {
+                    return d.key
+                })
+
+            var trajectories = users.selectAll('g')
+                .data((d) => {
+                    return d.values
+                })
+                .enter()
+                .append('g')
+                .attr('class', (d) => {
+                    return d.key
+                })
+
+            var paths = trajectories.selectAll('thing')
+                .data((d) => {
+                    return [d.values]
+                })
+                .enter()
+                .append('path')
+                .attr("fill", "none")
+                .attr("stroke", "steelblue")
+                .attr("stroke-width", 1.5)
+                .attr("class", 'trajectory')
+                .attr("id", d => {
+                    return d[0].trajectory
+                })
+
+
+            function render() {
+                paths
+                    .attr("d", d3.line()
+                        .x(function (d) {
+                            return project(d).x;
+                        })
+                        .y(function (d) {
+                            return project(d).y;
+                        })
+                    )
+            }
+
+            map.on("viewreset", render);
+            map.on("move", render);
+            map.on("moveend", render);
+            render();
+
+            let brush = d3.brush()
+                .extent([[0, 0], [1180, 800]])
+                .on("start brush", updateChart)
+
+            svg
+                .call(
+                    brush
                 )
+
+            function updateChart(event) {
+                extent = event.selection
+
+                let x0 = extent[0][0];
+                let x1 = extent[1][0];
+                let y0 = extent[0][1];
+                let y1 = extent[1][1];
+
+                let nodes = search(tree, x0, y0, x1, y1)
+
+                let selectedTrajectories = Array.from(new Set(d3.map(nodes, d => {
+                    return d.trajectory
+                })))
+                let chosenPaths = d3.selectAll('.trajectory').filter(d => {
+                    return selectedTrajectories.includes( d[0].trajectory)
+                    // return selectedTrajectories.includes(d.id)
+                })
+
+                // chosenPaths.
+
+                console.log(chosenPaths)
+                chosenPaths.classed("selectedPath", true)
+            }
+
         }
-
-        map.on("viewreset", render);
-        map.on("move", render);
-        map.on("moveend", render);
-        render();
-
-        let brush = d3.brush()
-            .extent([[0, 0], [1180, 800]])
-            .on("start brush", updateChart)
-
-        svg
-            .call(
-                brush
-            )
-
-        function updateChart(event) {
-            extent = event.selection
-            paths.classed("selectedPath", function(d){ return isBrushed(extent, d) } )
-        }
-
-        function isBrushed(brush_coords, path) {
-            var x0 = brush_coords[0][0],
-                x1 = brush_coords[1][0],
-                y0 = brush_coords[0][1],
-                y1 = brush_coords[1][1];
-            return true
-            // return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
-        }
-
-
-    });
+    );
 </script>
 
 </body>
