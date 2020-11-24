@@ -21,15 +21,17 @@
             margin: 20px;
         }
 
-         #circles{
-             position: absolute;
-             opacity: .1;
-             z-index: 1;
-         }
-        #centercircles{
+        #circles {
+            position: absolute;
+            opacity: .1;
+            z-index: 1;
+        }
+
+        #centercircles {
 
         }
-        #selectedcircles{
+
+        #selectedcircles {
             opacity: 1;
         }
 
@@ -37,6 +39,10 @@
             float: right;
             width: 35%;
             margin: 20px;
+        }
+
+        #selectedPath {
+            stroke: red;
         }
 
     </style>
@@ -60,9 +66,9 @@
 <script src="Scatter-Plot/scatterplot.js"></script>
 <script>
 
-    d3.csv("temporary_point_data.csv").then(function(data) {
-        s=new scatterplot(data)
-        d3.select('.select').append('button').attr('type','button').attr('onclick','s.drawcircles()').html('Draw ScatterPlot');
+    d3.csv("temporary_point_data.csv").then(function (data) {
+        s = new scatterplot(data)
+        d3.select('.select').append('button').attr('type', 'button').attr('onclick', 's.drawcircles()').html('Draw ScatterPlot');
     });
 
 
@@ -73,7 +79,11 @@
     d3.dsv(",", "all_trajectory_data.csv").then(function (data) {
         mapboxgl.accessToken = "pk.eyJ1IjoiYXVzdGlud2F0a2lucyIsImEiOiJja2hiaW00c3AwMDNwMnBtbXNzbm82aGkyIn0.JomTNPP-9_2Z7E3XGxcCeA";
 
-        let userData = d3.nest().key(function (d) {return d.user}).key(function (d) {return d.trajectory}).entries(data)
+        let userData = d3.nest().key(function (d) {
+            return d.user
+        }).key(function (d) {
+            return d.trajectory
+        }).entries(data)
         var map = new mapboxgl.Map({
             container: "map",
             style: "mapbox://styles/mapbox/streets-v11",
@@ -98,16 +108,24 @@
             .data(userData)
             .enter()
             .append('g')
-            .attr('class', (d) => {return d.key} )
+            .attr('class', (d) => {
+                return d.key
+            })
 
         var trajectories = users.selectAll('g')
-            .data((d) => {return d.values})
+            .data((d) => {
+                return d.values
+            })
             .enter()
             .append('g')
-            .attr('class', (d) => {return d.key} )
+            .attr('class', (d) => {
+                return d.key
+            })
 
         var paths = trajectories.selectAll('thing')
-            .data((d) => {return [d.values]})
+            .data((d) => {
+                return [d.values]
+            })
             .enter()
             .append('path')
             .attr("fill", "none")
@@ -131,6 +149,30 @@
         map.on("move", render);
         map.on("moveend", render);
         render();
+
+        let brush = d3.brush()
+            .extent([[0, 0], [1180, 800]])
+            .on("start brush", updateChart)
+
+        svg
+            .call(
+                brush
+            )
+
+        function updateChart(event) {
+            extent = event.selection
+            paths.classed("selectedPath", function(d){ return isBrushed(extent, d) } )
+        }
+
+        function isBrushed(brush_coords, path) {
+            var x0 = brush_coords[0][0],
+                x1 = brush_coords[1][0],
+                y0 = brush_coords[0][1],
+                y1 = brush_coords[1][1];
+            return true
+            // return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
+        }
+
 
     });
 </script>
