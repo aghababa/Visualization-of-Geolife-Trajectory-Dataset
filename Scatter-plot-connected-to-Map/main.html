@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Words</title>
+	<script src="https://d3js.org/d3.v6.min.js"></script>
+	<style>
+        #map {
+            top: 0;
+            bottom: 0;
+            width:900px;
+            height: 600px;
+        }
+	</style>
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+	integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+	crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+	integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+	crossorigin=""></script>
+	
+	
+</head>
+<body>
+	<div>
+		<span class="select">
+		  <label>Choose number of clusters:</label>
+		  <select id="cluster">
+		  	<option value="2">2</option>
+		  </select>
+		</span>
+	</div>
+	<div class="one"></div>
+	<div id="map"></div>
+
+<script src="main.js"></script>
+<script>
+	sm=new main()
+	d3.csv("final_data_with_indices.csv").then(function(data) {
+  	sm.data=data
+  	d3.select('.select').append('button').attr('type','button').attr('onclick','sm.drawcircles()').html('Draw ScatterPlot');
+	});
+
+</script>
+
+</body>
+</html>
