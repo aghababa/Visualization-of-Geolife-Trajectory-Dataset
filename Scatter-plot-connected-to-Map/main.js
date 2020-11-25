@@ -1,3 +1,4 @@
+// To run this file you should add your token below
 class main {
 	constructor(data){
 		this.data=data
