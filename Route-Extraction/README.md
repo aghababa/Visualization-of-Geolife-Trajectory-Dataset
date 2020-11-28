@@ -10,4 +10,4 @@ Also, I have connected the feature mapping to the class, i.e., by calling this c
 
 There was a bug in the first version of feature map (which is already on repo) and I found it and fixed it. 
 
-Now by creating an “var comp = new Computation(maindata, centers, predata)” class and using “comp.predictTraj”  and Unproject() function you will get the alt address of closest trajectories.
+Now by creating a "var comp = new Computation(maindata, centers, predata)" class and using "comp.predictTraj"  and Unproject() function you will get the alt address of closest trajectories.
