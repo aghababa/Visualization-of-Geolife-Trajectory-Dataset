@@ -169,7 +169,7 @@
                 })
 
 
-            function render() {
+            function render(redrawQuadtree = false) {
                 paths
                     .attr("d", d3.line()
                         .x(function (d) {
@@ -179,11 +179,24 @@
                             return project(d).y;
                         })
                     )
+
+                if (redrawQuadtree)  {
+                    tree = d3.quadtree()
+                        .x(d => {
+                            return project(d).x
+                        })
+                        .y(d => {
+                            return project(d).y
+                        })
+                        .addAll(data);
+                }
             }
 
             map.on("viewreset", render);
             map.on("move", render);
-            map.on("moveend", render);
+            map.on("moveend", () =>  {render(true)});
+
+
             render();
 
             let brush = d3.brush()
