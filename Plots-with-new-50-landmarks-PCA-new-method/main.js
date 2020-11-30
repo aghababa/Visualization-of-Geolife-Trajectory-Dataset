@@ -1,4 +1,8 @@
-
+class global{
+	constructor(){
+		this.status=0
+	}
+}
 class main{
 	constructor(maindata,centers,predata){
 		this.data=maindata
@@ -77,66 +81,13 @@ class main{
 	    id: 'mapbox/streets-v11',
 	    tileSize: 512,
 	    zoomOffset: -1,
-	    accessToken: // add token address here
+	    accessToken: 'pk.eyJ1IjoiaGFtZWR4YSIsImEiOiJja2hxOHN1MG8wNGFnMnpuZGoxeDQxZzBwIn0.j1Ta1s96jnqKxXqrQjtDqw'// add token address here
 	    }).addTo(this.map);
 	    let that=this
 	    this.map.on('click', function(e) {
 	    	that.cMap(e.latlng.lat, e.latlng.lng)
 		 });
-
-
-        var Q = [[40.02784036172628, 116.50178611278535],
-[40.085652349925475, 116.39329612255098],
-[40.08039874140986, 116.24772727489473],
-[40.05202225054736, 116.19966208934785],
-[39.97418906423696, 116.1694496870041],
-[39.899427860534345, 116.16807639598848],
-[39.831967504781055, 116.2518471479416],
-[39.82880367321281, 116.3617104291916],
-[39.87097611205365, 116.4935463666916],
-[39.95419054874236, 116.43724143505098],
-[40.00575375653265, 116.37956321239473],
-[40.024685570075626, 116.31501853466034],
-[39.9699793365808, 116.2738198041916],
-[39.90996254870152, 116.2793129682541],
-[39.91733586660022, 116.3617104291916],
-[39.967874375523536, 116.34385764598848],
-[39.71269591644774, 116.47981345653535],
-[39.66091215703148, 116.37407004833223],
-[39.6989611532183, 116.2573403120041],
-[39.74226919672803, 116.06095969676973],
-[39.90996254870152, 116.01426780223848],
-[40.129766654747705, 116.07743918895723],
-[40.21895804658573, 116.0760658979416],
-[40.257745909206854, 116.25596702098848],
-[40.31640959147105, 116.10215842723846],
-[40.20008024183078, 116.58418357372285],
-[40.07724638171063, 116.79155051708223],
-[39.897320728525514, 116.76133811473848],
-[40.095087305350994, 116.98068380355835],
-[39.93416561718383, 117.04934835433961],
-[39.60272060950412, 117.02874898910524],
-[39.537087506313945, 116.85022115707399],
-[39.32177827012156, 116.49766623973848],
-[39.35045657030925, 116.33699119091035],
-[39.45338894346977, 116.05271995067598],
-[40.030995007481806, 116.04585349559785],
-[40.28917921376592, 116.4660805463791],
-[40.41685741933303, 115.90852439403535],
-[39.41933055574406, 116.00316211581233],
-[39.4341814883212, 115.56096240878108],
-[38.994696721865594, 115.50629228353503],
-[39.1578093485124, 115.17120927572252],
-[38.91460188981307, 115.06134599447253],
-[39.96682187068797, 115.84260642528535],
-[40.444612929944775, 116.78323835134509],
-[39.037848825595745, 117.04134196043016],
-[39.18809007444354, 117.30501383543016],
-[39.65284221780906, 116.5751498937607],
-[39.80176509832639, 115.9763950109482],
-[39.70176509836639, 116.9763900109482]]
-
-	    L.polyline(Q, {className: 'abc',color: 'red'}).addTo(this.map);
+	  
 
 	}
 	cMap(lat,lng){
@@ -152,6 +103,7 @@ class main{
 
 	drawcircles(){
 		let that=this
+		let status=new global()
 		d3.select('#dots').html('');
 		function call(draw){
 			d3.select('.leaflet-container .leaflet-overlay-pane svg g').html('');
@@ -164,7 +116,7 @@ class main{
 			.attr('cx',d=>that.xscale(that.scale(d.x)))
 			.attr('cy',d=>that.yscale(that.scale(d.y)))
 			.attr('r',d=>{
-				if(d.x===d['center_x_'+k] && d.y===d['center_y_'+k]){centers.push(d)}else{return 3}
+				if(d.x===d['center_x_'+k] && d.y===d['center_y_'+k]){centers.push(d)}else{return 5}
 			})
 			.attr('fill',d=>{
 				return that.colorscale(+d['k:'+k])
@@ -172,17 +124,17 @@ class main{
 			.attr('stroke','black')
 			.attr('class',d=>'_'+((+d['k:'+k])).toString())
 			.on('click',function(d,i){
-		
+				status.status=1
 	  			let cluster=d3.select(this).attr('class')
 
 	  			d3.select('.scatterplot').selectAll('#center')
-	  			.style('opacity',0.3);
+	  			.style('opacity',0.25);
 		  		d3.select('.scatterplot').selectAll('circle')
-		  		.style('opacity',0.25)
-		  		.attr('r',3);
+		  		.style('opacity',0.15)
+		  		.attr('r',7);
 		  		d3.select('.scatterplot').selectAll('.'+cluster)
 		  		.style('opacity',1)
-		  		.attr('r',5);
+		  		.attr('r',7);
 		  		
 	  		let draw=[]
 	  		for(var i=0 ; i<data.length;i++){
@@ -190,7 +142,19 @@ class main{
 	  			if('_'+ +d['k:'+k]===cluster)draw.push(d['User Name']+'_'+(+d['Trajectory Name']).toString())
 	  		}
 	  		call(draw);
-	  		});
+	  		})
+	  		.on('mouseover',function(d,i){
+	  			if(status.status!==1){
+	  				console.log(status.status)
+	  				d3.select(this).style("stroke-width","4px");
+					call([i['User Name']+'_'+i['Trajectory Name']])
+	  			}
+				
+				
+			})
+			.on("mouseout", function(d,i){	
+				d3.select(this).style("stroke-width","1px");
+        	});
 			return centers
 		}
 		function drawcent(data){
@@ -199,28 +163,43 @@ class main{
 			.attr('y',d=>that.yscale(that.scale(d.y)))
 			.attr('width',10)
 			.attr('height',10)
+			.attr('stroke','#FF0303')
+			.attr('stroke-width',3)
 			.attr('fill',d=>{
 				return that.colorscale(+d['k:'+k])
 			})
 			.attr('class',d=>'_'+((+d['k:'+k])).toString())
 			.attr('id','center')
 			.on('click',function(d,i){
+				status.status=1
 				let cluster=d3.select(this).attr('class')
 				d3.select('.scatterplot').selectAll('#center')
-	  			.style('opacity',0.3);
+	  			.style('opacity',0.25);
 		  		d3.select('.scatterplot').selectAll('circle')
 		  		.style('opacity',0.15)
-		  		.attr('r',3);
+		  		.attr('r',5);
 		  		d3.select('.scatterplot').selectAll('.'+cluster)
 		  		.style('opacity',1)
-		  		.attr('r',5);
+		  		.attr('r',7);
 		  		let draw=[]
 		  		for(var i=0 ; i<data.length;i++){
 		  			d=data[i]
 		  			if('_'+ +d['k:'+k]===cluster)draw.push(d['User Name']+'_'+(+d['Trajectory Name']).toString())
 		  		}
 		  	call(draw)
-			});
+			})
+			.on('mouseover',function(d,i){
+	  			if(status.status!==1){
+	  				console.log(status.status)
+	  				d3.select(this).style("stroke-width","4px");
+					call([i['User Name']+'_'+i['Trajectory Name']])
+	  			}
+				
+				
+			})
+			.on("mouseout", function(d,i){	
+				d3.select(this).style("stroke-width","1px");
+        	});
 	}
 		this.mapcolordata={}
 		let k=document.getElementById("cluster").value
@@ -230,6 +209,7 @@ class main{
 		})
 		console.log(this.mapcolordata)
 		drawcent(draw(that.data))
+		
 
 		
 	}
