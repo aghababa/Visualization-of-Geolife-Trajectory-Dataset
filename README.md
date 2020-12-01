@@ -1,5 +1,9 @@
 # dataviscourse-project-Geolife
 
+# To visualize see: https://aghababa.github.io/Vis-Project/
+
+# Or see here for all clusters from 1 to 100: https://github.com/aghababa/new-test
+
 This is the repository for our Visualization for Data Science course. 
 
 In this project we are going to visualize the Geolife GPS Trajectory Dataset released by Microsoft. 
