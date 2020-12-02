@@ -17,8 +17,12 @@ as car, bus, walk or train.
 
 Team Members: Austin Sheen Watkins and Hasan Pourmahmoodaghababa
 
-We will talk about what we would have done step by step when we finish each phase. 
+To see what we have done, step by step, please see the following process book:
 
 ## Process book (includes in-class feedback)
 https://docs.google.com/document/d/1-BhvYp9iiuQITzBP5DffMFfcNs_2RvNu63aTDVKqBq0/edit?usp=sharing
 
+All final codes needed to have the visulization worked are stored in Plots-with-new-50-landmarks-PCA-new-method folder. 
+We haven't removed other folder/files as they can be necessary for grading purposes. 
+
+Nice job. 
