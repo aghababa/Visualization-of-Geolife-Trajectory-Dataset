@@ -1,8 +1,8 @@
 # dataviscourse-project-Geolife
 
-## To visualize see: https://aghababa.github.io/Vis-Project/
+## To see the visualization go to https://aghababa.github.io/Vis-Project/.
 
-## Or see here for all clusters from 1 to 100: https://aghababa.github.io/new-test/
+## Or see here for all clusters from 1 to 100: https://aghababa.github.io/new-test/.
 
 This is the repository for our Visualization for Data Science course. 
 
