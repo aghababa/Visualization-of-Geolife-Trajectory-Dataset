@@ -22,7 +22,9 @@ To see what we have done, step by step, please see the following process book:
 ## Process book (includes in-class feedback)
 https://docs.google.com/document/d/1-BhvYp9iiuQITzBP5DffMFfcNs_2RvNu63aTDVKqBq0/edit?usp=sharing
 
-All final codes needed to have the visulization worked are stored in Plots-with-new-50-landmarks-PCA-new-method folder. 
+All final codes needed to have the visulization are stored in "Plots-with-new-50-landmarks-PCA-new-method" 
+folder, and the dataset needed is in "data" folder. 
+
 We haven't removed other folder/files as they can be necessary for grading purposes. 
 
-Nice job. 
+Nice job. What do you think? :)
