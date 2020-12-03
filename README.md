@@ -2,8 +2,7 @@
 
 ### To see the visualization go to https://aghababa.github.io/Vis-Project/.
 
-### Or see here for all clusters from 1 to 100: https://aghababa.github.io/new-test/.
-(This is not recommended as it will need ~20 seconds for first load.)
+### Or see here for all clusters from 1 to 100: https://aghababa.github.io/new-test/. #####(This is not recommended as it will need ~20 seconds for first load.)
 
 ### Link to the YouTube Video: https://www.youtube.com/watch?v=IvHW79Oj4Vk&feature=emb_logo
 
